@@ -5,6 +5,15 @@
 #include "requests.hpp"
 #include "converter.hpp"
 
+/**
+ * @brief Function to perform a map matching algorithm
+ * 
+ * This functions takes points with coordinates and uses OSRM API to perform a map matching algorithm with the input points
+ * It returns the route adjusted to the map in GeoJSON format
+ * 
+ * @param points A string with all the points in a format like "-8.598872,41.167089;-8.601544,41.167101;-8.602729,41.165494;-8.606549,41.166443"
+ * @return A string with the contents of the route adjusted to the map in GeoJSON format ready to be used in tools like https://geojson.io/
+ */
 std::string map_match(const std::string& points);
 
 #endif
