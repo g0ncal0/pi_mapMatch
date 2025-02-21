@@ -8,7 +8,6 @@ std::string convert_completeGeoJSON_to_simpleGeoJSON(const std::string& complete
         size_t end = completeGeoJSON.find("]]", start);
         if (end != std::string::npos) {
             coordinates = completeGeoJSON.substr(start + 14, end - start - 13);
-            std::cout << "Resultado: " << coordinates << std::endl;
         }
         else {
             std::cout << "Bad Format" << std::endl;
@@ -46,8 +45,6 @@ std::string convert_completeGeoJSON_to_simpleGeoJSON(const std::string& complete
     }
 
     oss << END_SIMPLE_GEOJSON;
-
-    std::cout << std::endl << oss.str() << std::endl;
 
     return oss.str();
 }
