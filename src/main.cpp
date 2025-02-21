@@ -8,12 +8,6 @@ static size_t WriteCallback(void *contents, size_t size, size_t nmemb, void *use
     return size * nmemb;
 }
 
-void setup_routes(crow::SimpleApp& app) {
-    CROW_ROUTE(app, "/")([](){
-        return "Hello world";
-    });
-}
-
 int make_request(const char url[], std::string& readBuffer) {
     CURL *curl;
     CURLcode res;
@@ -35,14 +29,34 @@ int make_request(const char url[], std::string& readBuffer) {
     }
 }
 
-int main()
-{
+std::string map_match(const std::string& points) {
+    const char* points_char = points.c_str();
+    char url[150 + points.length()] = "http://localhost:5000/match/v1/driving/";
+    strcat(url, points_char);
+    strcat(url, "?steps=true&geometries=geojson&overview=full&annotations=false");
+
     std::string res;
 
-    if (make_request("http://localhost:5000/match/v1/driving/-8.598872,41.167089;-8.601544,41.167101;-8.602729,41.165494;-8.606549,41.166443?steps=true&geometries=geojson&overview=full&annotations=false", res) == 0) {
-        std::cout << res << std::endl;
+    if (make_request(url, res) == 0) {
+        return res;
     }
+    else {
+        return "Error";
+    }
+}
 
+void setup_routes(crow::SimpleApp& app) {
+    CROW_ROUTE(app, "/")([](){
+        return "Hello world";
+    });
+
+    CROW_ROUTE(app, "/map-match/<string>")([](const std::string& points){
+        return map_match(points);
+    });
+}
+
+int main()
+{
     crow::SimpleApp app;
 
     setup_routes(app);
