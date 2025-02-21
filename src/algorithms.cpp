@@ -9,7 +9,7 @@ std::string map_match(const std::string& points) {
     std::string res;
 
     if (make_request(url, res) == 0) {
-        return res;
+        return convert_completeGeoJSON_to_simpleGeoJSON(res);
     }
     else {
         return "Error";
