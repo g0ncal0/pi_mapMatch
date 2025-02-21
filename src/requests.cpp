@@ -5,7 +5,7 @@ static size_t WriteCallback(void *contents, size_t size, size_t nmemb, void *use
     return size * nmemb;
 }
 
-int make_request(const char url[], std::string& readBuffer) {
+int make_request(const char url[], std::string& response) {
     CURL *curl;
     CURLcode res;
 
@@ -13,7 +13,7 @@ int make_request(const char url[], std::string& readBuffer) {
     if(curl) {
         curl_easy_setopt(curl, CURLOPT_URL, url);
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, WriteCallback);
-        curl_easy_setopt(curl, CURLOPT_WRITEDATA, &readBuffer);
+        curl_easy_setopt(curl, CURLOPT_WRITEDATA, &response);
         res = curl_easy_perform(curl);
         curl_easy_cleanup(curl);
 
