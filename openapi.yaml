@@ -1,0 +1,106 @@
+openapi: 3.1.0
+info:
+  title: Map Matching API
+  description: API for map matching and routing
+  version: 1.0.0
+paths:
+  /map-match/{points}:
+    get:
+      summary: "Performs map matching"
+      description: "Takes a set of points and returns the result of the map matching in GeoJSON format ready to be used in geojson.io"
+      parameters:
+        - in: path
+          name: points
+          required: true
+          schema:
+            type: string
+          description: "Points for map matching."
+      responses:
+        '200':
+          description: "Map matching result"
+          content:
+            application/geo+json:
+              schema:
+                type: object
+                description: "GeoJSON formatted data representing the matched route"
+                properties:
+                  type:
+                    type: string
+                    example: "FeatureCollection"
+                  features:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        type:
+                          type: string
+                          example: "Feature"
+                        geometry:
+                          type: object
+                          properties:
+                            type:
+                              type: string
+                              example: "LineString"
+                            coordinates:
+                              type: array
+                              items:
+                                type: array
+                                items:
+                                  type: number
+                                  example: -8.598169
+                        properties:
+                          type: object
+                          additionalProperties: true
+                          description: "Additional properties can be added here"
+        '400':
+          description: "Invalid parameter"
+  /route/{points}:
+    get:
+      summary: "Gets a route"
+      description: "Takes a set of points and returns a route in GeoJSON format ready to be used in geojson.io"
+      parameters:
+        - in: path
+          name: points
+          required: true
+          schema:
+            type: string
+          description: "Points to calculate the route."
+      responses:
+        '200':
+          description: "Map matching result"
+          content:
+            application/geo+json:
+              schema:
+                type: object
+                description: "GeoJSON formatted data representing the matched route"
+                properties:
+                  type:
+                    type: string
+                    example: "FeatureCollection"
+                  features:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        type:
+                          type: string
+                          example: "Feature"
+                        geometry:
+                          type: object
+                          properties:
+                            type:
+                              type: string
+                              example: "LineString"
+                            coordinates:
+                              type: array
+                              items:
+                                type: array
+                                items:
+                                  type: number
+                                  example: -8.598169
+                        properties:
+                          type: object
+                          additionalProperties: true
+                          description: "Additional properties can be added here"
+        '400':
+          description: "Invalid parameter"
