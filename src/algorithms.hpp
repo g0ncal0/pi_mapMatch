@@ -5,6 +5,8 @@
 #include "requests.hpp"
 #include "converter.hpp"
 
+bool no_match(const std::string& res);
+
 /**
  * @brief Function to perform a map matching algorithm
  * 
