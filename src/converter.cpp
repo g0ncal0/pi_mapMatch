@@ -1,8 +1,7 @@
 #include "converter.hpp"
 
-std::string convert_completeGeoJSON_to_simpleGeoJSON(const std::string& completeGeoJSON) {
+std::string get_coordinates_from_GeoJson(const std::string& completeGeoJSON, std::string& coordinates) {
     size_t start = completeGeoJSON.find("coordinates");
-    std::string coordinates;
 
     if (start != std::string::npos) {
         size_t end = completeGeoJSON.find("]]", start);
@@ -10,16 +9,41 @@ std::string convert_completeGeoJSON_to_simpleGeoJSON(const std::string& complete
             coordinates = completeGeoJSON.substr(start + 14, end - start - 13);
         }
         else {
-            std::cout << "Bad Format" << std::endl;
-
-            return "Error";
+            return "Error: Bad Format";
         }
     }
     else {
-        std::cout << "Bad Format" << std::endl;
-
-        return "Error";
+        return "Error: Bad Format";
     }
+
+    return "OK";
+}
+
+void convert_GeoJSON_coordinates_to_request_coordinates(const std::string& geoCoord, std::string& reqCoord) {
+    std::ostringstream oss;
+    std::istringstream iss(geoCoord.substr(1, geoCoord.size() - 2));
+    std::string buf;
+    char trash;
+    bool first = true;
+
+    while (std::getline(iss, buf, ']')) {
+        if (!first) oss << ';';
+        else first = false;
+
+        oss << buf;
+
+        iss >> trash >> trash;
+    }
+
+    reqCoord = oss.str();
+}
+
+std::string convert_completeGeoJSON_to_simpleGeoJSON(const std::string& completeGeoJSON) {
+    std::string coordinates, aux_res;
+
+    aux_res = get_coordinates_from_GeoJson(completeGeoJSON, coordinates);
+
+    if (aux_res != "OK") return aux_res;
 
     std::ostringstream oss;
 

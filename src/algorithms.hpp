@@ -18,4 +18,6 @@ bool no_match(const std::string& res);
  */
 std::string map_match(const std::string& points);
 
+std::string route(const std::string& points);
+
 #endif

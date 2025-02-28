@@ -4,8 +4,13 @@
 #include <iostream>
 #include <sstream>
 #include <string>
+#include <string>
 #include <string_view>
 #include "constants.hpp"
+
+std::string get_coordinates_from_GeoJson(const std::string& completeGeoJSON, std::string& coordinates);
+
+void convert_GeoJSON_coordinates_to_request_coordinates(const std::string& geoCoord, std::string& reqCoord);
 
 /**
  * @brief Function to convert a string from a complete GeoJSON format to a simple GeoJSON format
