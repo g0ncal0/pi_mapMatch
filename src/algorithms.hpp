@@ -20,6 +20,8 @@ std::string map_match(const std::string& points);
 
 std::string route(const std::string& points);
 
+std::string map_match_valhalla(const std::string& points);
+
 std::string route_valhalla(const std::string& points);
 
 #endif

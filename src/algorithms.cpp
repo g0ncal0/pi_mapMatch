@@ -52,13 +52,29 @@ std::string route(const std::string& points) {
     // TODO: se for para também ter serviço de routes isto não pode ficar assim
 }
 
-std::string route_valhalla(const std::string& points) {
-    char url[500 + points.length()] = "http://localhost:8002/route";
+std::string map_match_valhalla(const std::string& points) {
+    char url[500 + points.length()*2] = "http://localhost:8002/trace_route";  // TODO: Tem de ser dinâmico. Pode vir a ser parametrizável
 
     std::string valhallaCoord;
     convert_input_coordinates_to_valhalla_coordinates(points, valhallaCoord);
 
-    std::string json = R"({"locations":[)" + valhallaCoord + R"(],"costing":"auto","narrative":false,"format":"osrm","shape_format":"geojson"})";
+    std::string json = R"({"shape":[)" + valhallaCoord + R"(],"costing":"bus","shape_match":"map_snap","format":"osrm","shape_format":"geojson","narrative":false})";
+    std::string res;
+
+    if (make_request(url, json, res) != 0) {
+        return "Error: Bad Request";
+    }
+
+    return convert_completeGeoJSON_to_simpleGeoJSON(res);
+}
+
+std::string route_valhalla(const std::string& points) {
+    char url[500 + points.length()*2] = "http://localhost:8002/route";
+
+    std::string valhallaCoord;
+    convert_input_coordinates_to_valhalla_coordinates(points, valhallaCoord);
+
+    std::string json = R"({"locations":[)" + valhallaCoord + R"(],"costing":"bus","narrative":false,"format":"osrm","shape_format":"geojson"})";
     std::string res;
 
     if (make_request(url, json, res) != 0) {
