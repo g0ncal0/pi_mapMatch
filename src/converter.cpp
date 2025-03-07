@@ -72,3 +72,23 @@ std::string convert_completeGeoJSON_to_simpleGeoJSON(const std::string& complete
 
     return oss.str();
 }
+
+void convert_input_coordinates_to_valhalla_coordinates(const std::string& inputCoord, std::string& valhallaCoord) {
+    std::ostringstream oss;
+    std::istringstream iss(inputCoord);
+
+    std::string lat, lon;
+    bool first = true;
+
+    while (!iss.eof()) {
+        if (!first) oss << ',';
+        else first = false;
+
+        std::getline(iss, lon, ',');
+        std::getline(iss, lat, ';');
+
+        oss << "{\"lat\":" << lat << ",\"lon\":" << lon << "}";
+    }
+
+    valhallaCoord = oss.str();
+}

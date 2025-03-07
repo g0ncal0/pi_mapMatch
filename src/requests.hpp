@@ -20,9 +20,10 @@ static size_t WriteCallback(void *contents, size_t size, size_t nmemb, void *use
  * @brief Function to make a HTTP request using cURL
  * 
  * @param url The URL for the HTTP request
+ * @param json_data The JSON data to be sent in the request
  * @param response The server response
  * @return 0 if no errors
  */
-int make_request(const char url[], std::string& response);
+int make_request(const char url[], const std::string& json_data, std::string& response);
 
 #endif

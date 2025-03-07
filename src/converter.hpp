@@ -23,4 +23,6 @@ void convert_GeoJSON_coordinates_to_request_coordinates(const std::string& geoCo
  */
 std::string convert_completeGeoJSON_to_simpleGeoJSON(const std::string& completeGeoJSON);
 
+void convert_input_coordinates_to_valhalla_coordinates(const std::string& inputCoord, std::string& valhallaCoord);
+
 #endif 
