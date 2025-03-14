@@ -86,32 +86,13 @@ std::string convert_completeGeoJSON_to_simpleGeoJSON(const std::string& complete
 
     aux_res = get_coordinates_from_GeoJson(completeGeoJSON, coordinates);
 
-    std::cout << coordinates << std::endl;
-
     if (aux_res != "OK") return aux_res;
 
     std::ostringstream oss;
 
     oss << BEGIN_SIMPLE_GEOJSON;
 
-    size_t pos = 1, end;
-    std::string_view longitude, latitude;
-    bool first = true;
-
-    while (pos < coordinates.length()) {
-        end = coordinates.find(',', pos);
-        longitude = coordinates.substr(pos, end - pos);
-        pos = end + 1;
-
-        end = coordinates.find(']', pos);
-        latitude = coordinates.substr(pos, end - pos);
-        pos = end + 3;
-
-        if (!first) oss << ',';
-        else first = false;
-        
-        oss << "\n                    [\n                        " << longitude << ",\n                        " << latitude << "\n                    ]";
-    }
+    oss << convert_coordinates_to_GeoJSON_feature(coordinates, "LineString", true);
 
     oss << END_SIMPLE_GEOJSON;
 

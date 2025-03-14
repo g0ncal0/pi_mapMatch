@@ -26,15 +26,15 @@ void setup_routes(crow::SimpleApp& app) {
 
 int main()
 {
-    std::string test = convert_coordinates_to_GeoJSON_feature("-8.611,41.149;-8.610,41.149;-8.610,41.148;-8.611,41.148;-8.611,41.149;", "Polygon", false);
+    //std::string test = convert_coordinates_to_GeoJSON_feature("-8.611,41.149;-8.610,41.149;-8.610,41.148;-8.611,41.148;-8.611,41.149;", "Polygon", false);
     //std::string test = convert_coordinates_to_GeoJSON_feature("[-8.598169,41.167126],[-8.598199,41.167062],[-8.598105,41.167032],[-8.597293,41.166804],[-8.597429,41.166511]", "Polygon", true);
-    std::cout << test << std::endl;
+    //std::cout << test << std::endl;
 
-    //crow::SimpleApp app;
+    crow::SimpleApp app;
 
-    //setup_routes(app);
+    setup_routes(app);
 
-    //app.port(18080).multithreaded().run();
+    app.port(18080).multithreaded().run();
 
     return 0;
 }
