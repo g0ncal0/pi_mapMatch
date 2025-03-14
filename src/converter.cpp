@@ -54,7 +54,7 @@ std::string convert_coordinates_to_GeoJSON_feature(const std::string& coordinate
     if (type == "Polygon")
         oss << "\n                    [";
 
-    while (pos < coordinates.length()) {
+    while (pos < coordinates.length() && end != std::string::npos) {
         end = coordinates.find(coord_divider_char, pos);
         longitude = coordinates.substr(pos, end - pos);
         pos = end + 1;
@@ -62,7 +62,8 @@ std::string convert_coordinates_to_GeoJSON_feature(const std::string& coordinate
         end = coordinates.find(coord_end_char, pos);
         aux_end = (end != std::string::npos) ? end - pos : end;
         latitude = coordinates.substr(pos, aux_end);
-        pos = end + jump_end;
+        if (pos != std::string::npos)
+            pos = end + jump_end;
 
         if (!first) oss << ',';
         else first = false;
@@ -117,4 +118,26 @@ void convert_input_coordinates_to_valhalla_coordinates(const std::string& inputC
     }
 
     valhallaCoord = oss.str();
+}
+
+std::string get_exclude_polygons_geoJSON(const std::string& excludePolygons) {
+    if (excludePolygons == "") return "";
+
+    std::ostringstream oss;
+    oss << "\n  \"exclude_polygons\": [";
+
+    size_t pos = 1, end;
+    std::string excludePolygon;
+
+    while (pos < excludePolygons.length()) {
+        end = excludePolygons.find(']', pos);
+        excludePolygon = excludePolygons.substr(pos, end - pos);
+        pos = end + 3;
+
+        oss << convert_coordinates_to_GeoJSON_feature(excludePolygon, "Polygon", false);
+    }
+
+    oss << "\n  ]\n";
+
+    return oss.str();
 }

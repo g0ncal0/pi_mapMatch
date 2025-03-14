@@ -68,13 +68,16 @@ std::string map_match_valhalla(const std::string& points) {
     return convert_completeGeoJSON_to_simpleGeoJSON(res);
 }
 
-std::string route_valhalla(const std::string& points) {
-    char url[500 + points.length()*2] = "http://localhost:8002/route";
+std::string route_valhalla(const std::string& points, const std::string& excludePolygons) {
+    char url[500 + points.length()*2 + excludePolygons.length()*2] = "http://localhost:8002/route";
 
     std::string valhallaCoord;
     convert_input_coordinates_to_valhalla_coordinates(points, valhallaCoord);
 
-    std::string json = R"({"locations":[)" + valhallaCoord + R"(],"costing":"bus","narrative":false,"format":"osrm","shape_format":"geojson"})";
+    std::string excludePolygonsGeoJSON = get_exclude_polygons_geoJSON(excludePolygons);
+
+    std::string json = R"({"locations":[)" + valhallaCoord + R"(],"costing":"bus","narrative":false,"format":"osrm","shape_format":"geojson")" + (excludePolygons == "" ? "," + excludePolygons : "") + "}";
+
     std::string res;
 
     if (make_request(url, json, res) != 0) {
