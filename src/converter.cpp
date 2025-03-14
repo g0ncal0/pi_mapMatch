@@ -41,7 +41,7 @@ void convert_GeoJSON_coordinates_to_request_coordinates(const std::string& geoCo
 std::string convert_coordinates_to_formated_GeoJSON_coordinates(const std::string& coordinates, const std::string& type, bool coordsFromGeoJSON) {
     std::ostringstream oss;
 
-    size_t pos = coordsFromGeoJSON ? 1 : 0, end, aux_end;
+    size_t pos = coordsFromGeoJSON ? 1 : 0, end = 0, aux_end;
     std::string_view longitude, latitude;
     bool first = true;
 
@@ -137,8 +137,12 @@ std::string get_exclude_polygons_geoJSON(const std::string& excludePolygons) {
 
     size_t pos = 1, end;
     std::string excludePolygon;
+    bool first = true; 
 
     while (pos < excludePolygons.length()) {
+        if (!first) oss << ",";
+        else first = false;
+
         end = excludePolygons.find(']', pos);
         excludePolygon = excludePolygons.substr(pos, end - pos);
         pos = end + 3;
