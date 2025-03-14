@@ -38,6 +38,47 @@ void convert_GeoJSON_coordinates_to_request_coordinates(const std::string& geoCo
     reqCoord = oss.str();
 }
 
+std::string convert_coordinates_to_formated_GeoJSON_coordinates(const std::string& coordinates, const std::string& type, bool coordsFromGeoJSON) {
+    std::ostringstream oss;
+
+    size_t pos = coordsFromGeoJSON ? 1 : 0, end, aux_end;
+    std::string_view longitude, latitude;
+    bool first = true;
+
+    char coord_divider_char = ',';
+    char coord_end_char = coordsFromGeoJSON ? ']' : ';';
+    int jump_end = coordsFromGeoJSON ? 3 : 1;
+
+    if (type == "Polygon")
+        oss << "\n                    [";
+
+    while (pos < coordinates.length() && end != std::string::npos) {
+        end = coordinates.find(coord_divider_char, pos);
+        longitude = coordinates.substr(pos, end - pos);
+        pos = end + 1;
+
+        end = coordinates.find(coord_end_char, pos);
+        aux_end = (end != std::string::npos) ? end - pos : end;
+        latitude = coordinates.substr(pos, aux_end);
+
+        if (pos != std::string::npos)
+            pos = end + jump_end;
+
+        if (!first) oss << ',';
+        else first = false;
+        
+        if (type == "LineString")
+            oss << "\n                    [\n                        " << longitude << ",\n                        " << latitude << "\n                    ]";
+        else
+            oss << "\n                         [" << longitude << ", " << latitude << "]";
+    }
+
+    if (type == "Polygon")
+        oss << "\n                    ]";
+
+    return oss.str();
+}
+
 std::string convert_coordinates_to_GeoJSON_feature(const std::string& coordinates, const std::string& type, bool coordsFromGeoJSON) {
     std::ostringstream oss;
 
@@ -62,6 +103,7 @@ std::string convert_coordinates_to_GeoJSON_feature(const std::string& coordinate
         end = coordinates.find(coord_end_char, pos);
         aux_end = (end != std::string::npos) ? end - pos : end;
         latitude = coordinates.substr(pos, aux_end);
+
         if (pos != std::string::npos)
             pos = end + jump_end;
 
@@ -134,7 +176,7 @@ std::string get_exclude_polygons_geoJSON(const std::string& excludePolygons) {
         excludePolygon = excludePolygons.substr(pos, end - pos);
         pos = end + 3;
 
-        oss << convert_coordinates_to_GeoJSON_feature(excludePolygon, "Polygon", false);
+        oss << convert_coordinates_to_formated_GeoJSON_coordinates(excludePolygon, "Polygon", false);
     }
 
     oss << "\n  ]\n";
