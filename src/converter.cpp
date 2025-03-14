@@ -51,38 +51,20 @@ std::string convert_coordinates_to_GeoJSON_feature(const std::string& coordinate
     char coord_end_char = coordsFromGeoJSON ? ']' : ';';
     int jump_end = coordsFromGeoJSON ? 3 : 1;
 
-    if (false) {
-        while (pos < coordinates.length()) {
-            end = coordinates.find(',', pos);
-            longitude = coordinates.substr(pos, end - pos);
-            pos = end + 1;
+    while (pos < coordinates.length()) {
+        end = coordinates.find(coord_divider_char, pos);
+        longitude = coordinates.substr(pos, end - pos);
+        pos = end + 1;
 
-            end = coordinates.find(']', pos);
-            latitude = coordinates.substr(pos, end - pos);
-            pos = end + 3;
+        end = coordinates.find(coord_end_char, pos);
+        aux_end = (end != std::string::npos) ? end - pos : end;
+        latitude = coordinates.substr(pos, aux_end);
+        pos = end + jump_end;
 
-            if (!first) oss << ',';
-            else first = false;
-            
-            oss << "\n                    [\n                        " << longitude << ",\n                        " << latitude << "\n                    ]";
-        }
-    }
-    else {
-        while (pos < coordinates.length()) {
-            end = coordinates.find(coord_divider_char, pos);
-            longitude = coordinates.substr(pos, end - pos);
-            pos = end + 1;
-
-            end = coordinates.find(coord_end_char, pos);
-            aux_end = (end != std::string::npos) ? end - pos : end;
-            latitude = coordinates.substr(pos, aux_end);
-            pos = end + jump_end;
-
-            if (!first) oss << ',';
-            else first = false;
-            
-            oss << "\n                    [\n                        " << longitude << ",\n                        " << latitude << "\n                    ]";
-        }
+        if (!first) oss << ',';
+        else first = false;
+        
+        oss << "\n                    [\n                        " << longitude << ",\n                        " << latitude << "\n                    ]";
     }
 
     oss << END_FEATURE;
