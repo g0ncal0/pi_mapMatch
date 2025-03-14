@@ -76,8 +76,8 @@ std::string route_valhalla(const std::string& points, const std::string& exclude
 
     std::string excludePolygonsGeoJSON = get_exclude_polygons_geoJSON(excludePolygons);
 
-    std::string json = R"({"locations":[)" + valhallaCoord + R"(],"costing":"bus","narrative":false,"format":"osrm","shape_format":"geojson")" + (excludePolygons != "" ? "," + excludePolygons : "") + "}";
-    
+    std::string json = R"({"locations":[)" + valhallaCoord + R"(],"costing":"bus","narrative":false,"format":"osrm","shape_format":"geojson")" + (excludePolygons != "" ? "," + excludePolygonsGeoJSON : "") + "}";
+
     std::string res;
 
     if (make_request(url, json, res) != 0) {
