@@ -22,9 +22,6 @@ void setup_routes(crow::SimpleApp& app) {
     CROW_ROUTE(app, "/route/valhalla/<string>")([](const crow::request& req, const std::string& points){
         const char* excludePolygonsPtr = req.url_params.get("exclude_polygons");
         std::string excludePolygons = excludePolygonsPtr ? excludePolygonsPtr : "";
-        if (excludePolygons.empty()) {
-            excludePolygons = "";
-        }
         
         return route_valhalla(points, excludePolygons);
     });
