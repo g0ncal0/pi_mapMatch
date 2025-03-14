@@ -84,40 +84,7 @@ std::string convert_coordinates_to_GeoJSON_feature(const std::string& coordinate
 
     oss << BEGIN_FEATURE << type << MIDDLE_FEATURE;
 
-    size_t pos = coordsFromGeoJSON ? 1 : 0, end, aux_end;
-    std::string_view longitude, latitude;
-    bool first = true;
-
-    char coord_divider_char = ',';
-    char coord_end_char = coordsFromGeoJSON ? ']' : ';';
-    int jump_end = coordsFromGeoJSON ? 3 : 1;
-
-    if (type == "Polygon")
-        oss << "\n                    [";
-
-    while (pos < coordinates.length() && end != std::string::npos) {
-        end = coordinates.find(coord_divider_char, pos);
-        longitude = coordinates.substr(pos, end - pos);
-        pos = end + 1;
-
-        end = coordinates.find(coord_end_char, pos);
-        aux_end = (end != std::string::npos) ? end - pos : end;
-        latitude = coordinates.substr(pos, aux_end);
-
-        if (pos != std::string::npos)
-            pos = end + jump_end;
-
-        if (!first) oss << ',';
-        else first = false;
-        
-        if (type == "LineString")
-            oss << "\n                    [\n                        " << longitude << ",\n                        " << latitude << "\n                    ]";
-        else
-            oss << "\n                         [" << longitude << ", " << latitude << "]";
-    }
-
-    if (type == "Polygon")
-        oss << "\n                    ]";
+    oss << convert_coordinates_to_formated_GeoJSON_coordinates(coordinates, type, coordsFromGeoJSON);
 
     oss << END_FEATURE;
 
