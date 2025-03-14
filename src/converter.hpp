@@ -12,6 +12,8 @@ std::string get_coordinates_from_GeoJson(const std::string& completeGeoJSON, std
 
 void convert_GeoJSON_coordinates_to_request_coordinates(const std::string& geoCoord, std::string& reqCoord);
 
+std::string convert_coordinates_to_GeoJSON_feature(const std::string& coordinates, const std::string& type, bool coordsFromGeoJSON);
+
 /**
  * @brief Function to convert a string from a complete GeoJSON format to a simple GeoJSON format
  * 
