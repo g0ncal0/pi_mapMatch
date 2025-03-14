@@ -23,11 +23,11 @@ const std::string END_SIMPLE_GEOJSON = R"(
 
 const std::string BEGIN_FEATURE = R"(
         {
-            "type": ")";
+            "type": "Feature",
+            "geometry": {
+                "type": ")";
 
 const std::string MIDDLE_FEATURE = R"(",
-            "geometry": {
-                "type": "LineString",
                 "coordinates": [)";
 
 const std::string END_FEATURE = R"(
