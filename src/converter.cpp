@@ -91,7 +91,7 @@ std::string convert_coordinates_to_GeoJSON_feature(const std::string& coordinate
     return oss.str();
 }
 
-std::string convert_completeGeoJSON_to_simpleGeoJSON(const std::string& completeGeoJSON) {
+std::string convert_completeGeoJSON_to_simpleGeoJSON(const std::string& completeGeoJSON, const std::string& excludePolygons) {
     std::string coordinates, aux_res;
 
     aux_res = get_coordinates_from_GeoJson(completeGeoJSON, coordinates);
@@ -103,6 +103,10 @@ std::string convert_completeGeoJSON_to_simpleGeoJSON(const std::string& complete
     oss << BEGIN_SIMPLE_GEOJSON;
 
     oss << convert_coordinates_to_GeoJSON_feature(coordinates, "LineString", true);
+
+    if (excludePolygons != "") oss << ",";
+
+    oss << get_exclude_polygons_geoJSON_features(excludePolygons);
 
     oss << END_SIMPLE_GEOJSON;
 
@@ -148,6 +152,31 @@ std::string get_exclude_polygons_geoJSON(const std::string& excludePolygons) {
         pos = end + 3;
 
         oss << convert_coordinates_to_formated_GeoJSON_coordinates(excludePolygon, "Polygon", false);
+    }
+
+    oss << "\n  ]\n";
+
+    return oss.str();
+}
+
+std::string get_exclude_polygons_geoJSON_features(const std::string& excludePolygons) {
+    if (excludePolygons == "") return "";
+
+    std::ostringstream oss;
+
+    size_t pos = 1, end;
+    std::string excludePolygon;
+    bool first = true; 
+
+    while (pos < excludePolygons.length()) {
+        if (!first) oss << ",";
+        else first = false;
+
+        end = excludePolygons.find(']', pos);
+        excludePolygon = excludePolygons.substr(pos, end - pos);
+        pos = end + 3;
+
+        oss << convert_coordinates_to_GeoJSON_feature(excludePolygon, "Polygon", false);
     }
 
     oss << "\n  ]\n";

@@ -25,10 +25,12 @@ std::string convert_coordinates_to_GeoJSON_feature(const std::string& coordinate
  * @param completeGeoJSON A string with the contents of the complete GeoJSON format
  * @return A string with the contents of the simple GeoJSON format ready to be used in tools like https://geojson.io/
  */
-std::string convert_completeGeoJSON_to_simpleGeoJSON(const std::string& completeGeoJSON);
+std::string convert_completeGeoJSON_to_simpleGeoJSON(const std::string& completeGeoJSON, const std::string& excludePolygons);
 
 void convert_input_coordinates_to_valhalla_coordinates(const std::string& inputCoord, std::string& valhallaCoord);
 
 std::string get_exclude_polygons_geoJSON(const std::string& excludePolygons);
+
+std::string get_exclude_polygons_geoJSON_features(const std::string& excludePolygons);
 
 #endif 

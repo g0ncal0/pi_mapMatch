@@ -8,7 +8,6 @@ const std::string BEGIN_SIMPLE_GEOJSON = R"({
     "features": [)";
 
 const std::string END_SIMPLE_GEOJSON = R"(
-    ]
 }
 )";
 

@@ -28,7 +28,7 @@ std::string map_match(const std::string& points) {
         // TODO: isto é um bocado disparate porque a route com overview full fica praticamente igual ao que estou a fazer e deve ser mais rápido -> Verificar se compensa ou não
     }
 
-    return convert_completeGeoJSON_to_simpleGeoJSON(res);
+    return convert_completeGeoJSON_to_simpleGeoJSON(res, "");
 }
 
 std::string route(const std::string& points) {
@@ -47,7 +47,7 @@ std::string route(const std::string& points) {
         return "Error: No Match Found";
     }
 
-    return convert_completeGeoJSON_to_simpleGeoJSON(res);
+    return convert_completeGeoJSON_to_simpleGeoJSON(res, "");
 
     // TODO: se for para também ter serviço de routes isto não pode ficar assim
 }
@@ -65,7 +65,7 @@ std::string map_match_valhalla(const std::string& points) {
         return "Error: Bad Request";
     }
 
-    return convert_completeGeoJSON_to_simpleGeoJSON(res);
+    return convert_completeGeoJSON_to_simpleGeoJSON(res, "");
 }
 
 std::string route_valhalla(const std::string& points, const std::string& excludePolygons) {
@@ -84,5 +84,5 @@ std::string route_valhalla(const std::string& points, const std::string& exclude
         return "Error: Bad Request";
     }
 
-    return convert_completeGeoJSON_to_simpleGeoJSON(res);
+    return convert_completeGeoJSON_to_simpleGeoJSON(res, excludePolygons);
 }
