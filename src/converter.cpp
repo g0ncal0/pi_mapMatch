@@ -182,3 +182,39 @@ std::string get_exclude_polygons_geoJSON_features(const std::string& excludePoly
 
     return oss.str();
 }
+
+std::vector<std::vector<std::pair<double, double>>> get_exclude_polygons_list(const std::string& excludePolygons) {
+    std::vector<std::vector<std::pair<double, double>>> polygons_list;
+
+    if (excludePolygons == "") return polygons_list;
+
+    size_t pos = 1, end;
+    std::string excludePolygon;
+
+    while (pos < excludePolygons.length()) {
+        end = excludePolygons.find(']', pos);
+        excludePolygon = excludePolygons.substr(pos, end - pos);
+        pos = end + 3;
+
+
+        polygons_list.push_back(get_exclude_polygon_list(excludePolygon));
+    }
+
+    return polygons_list;
+}
+
+std::vector<std::pair<double, double>> get_exclude_polygon_list(const std::string& excludePolygon) {
+    std::vector<std::pair<double, double>> polygonList;
+
+    std::istringstream iss(excludePolygon);
+
+    size_t pos = 0, end = 0, aux_end;
+    double longitude, latitude;
+    char trash;
+
+    while (iss >> longitude >> trash >> latitude >> trash) {
+        polygonList.push_back({longitude, latitude});
+    }
+
+    return polygonList;   
+}

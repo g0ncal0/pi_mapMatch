@@ -2,6 +2,7 @@
 #define ALGORITHMS_HPP
 
 #include <cstring>
+#include <list>
 #include "requests.hpp"
 #include "converter.hpp"
 #include "parser.hpp"
@@ -26,5 +27,7 @@ std::string map_match_valhalla(const std::string& points);
 std::string route_valhalla(const std::string& points, const std::string& excludePolygons);
 
 std::string bus_route(const std::string& routeID, const std::string& directionID, const std::string& excludePolygons);
+
+std::string remove_stops_in_excluded_zones(std::list<std::tuple<std::string, std::string, std::string, int>>& stops, const std::vector<std::vector<std::pair<double, double>>>& excludePolygons);
 
 #endif

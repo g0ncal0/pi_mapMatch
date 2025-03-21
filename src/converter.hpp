@@ -6,6 +6,9 @@
 #include <string>
 #include <string>
 #include <string_view>
+#include <vector>
+#include <list>
+#include <utility>
 #include "constants.hpp"
 
 /**
@@ -46,5 +49,9 @@ void convert_input_coordinates_to_valhalla_coordinates(const std::string& inputC
 std::string get_exclude_polygons_geoJSON(const std::string& excludePolygons);
 
 std::string get_exclude_polygons_geoJSON_features(const std::string& excludePolygons);
+
+std::vector<std::vector<std::pair<double, double>>> get_exclude_polygons_list(const std::string& excludePolygons);
+
+std::vector<std::pair<double, double>> get_exclude_polygon_list(const std::string& excludePolygon);
 
 #endif 

@@ -87,8 +87,62 @@ std::string route_valhalla(const std::string& points, const std::string& exclude
     return convert_completeGeoJSON_to_simpleGeoJSON(res, excludePolygons);
 }
 
+bool pointIsInsidePolygon(double lon, double lat, const std::vector<std::pair<double, double>>& polygon) {
+    int n = polygon.size();
+    bool inside = false;
+    
+    for (int i = 0, j = n - 1; i < n; j = i++) {
+        double x1 = polygon[i].first, y1 = polygon[i].second;
+        double x2 = polygon[j].first, y2 = polygon[j].second;
+
+        if (((y1 > lat) != (y2 > lat)) &&
+            (lon < (x2 - x1) * (lat - y1) / (y2 - y1) + x1)) {
+            inside = !inside;
+        }
+    }
+
+    return inside;
+}
+
+std::string remove_stops_in_excluded_zones(std::list<std::tuple<std::string, std::string, std::string, int>>& stops, const std::vector<std::vector<std::pair<double, double>>>& excludePolygons) {
+    std::ostringstream oss;
+    bool first = true;
+    
+    auto it = stops.begin();
+
+    while (it != stops.end()) {
+        double longitude = std::stod(std::get<2>(*it));
+        double latitude = std::stod(std::get<1>(*it));
+
+        for (auto polygon : excludePolygons) {
+            if (pointIsInsidePolygon(longitude, latitude, polygon)) {
+                if (!first) oss << ", ";
+                else first = false;
+
+                oss << std::get<2>(*it);
+
+                it = stops.erase(it);
+                break;
+            }
+        }
+
+        it++;
+    }
+
+    std::string reportRemovedStops = oss.str();
+
+    if (!reportRemovedStops.empty()) {
+        return reportRemovedStops + " stops had to be removed because collided with one or more excluded zones.\n";
+    }
+
+    return "";
+}
+
 std::string bus_route(const std::string& routeID, const std::string& directionID, const std::string& excludePolygons) {
-    std::vector<std::tuple<std::string, std::string, std::string, int>> stops = get_stops_from_trip(routeID, directionID);
+    std::list<std::tuple<std::string, std::string, std::string, int>> stops = get_stops_from_trip(routeID, directionID);
+    std::vector<std::vector<std::pair<double, double>>> excludePolygonsList = get_exclude_polygons_list(excludePolygons);
+
+    std::string reportRemovedStops = remove_stops_in_excluded_zones(stops, excludePolygonsList);
 
     std::string points = get_coordinates_string_from_stops(stops);
 

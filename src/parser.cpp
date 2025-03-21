@@ -1,6 +1,6 @@
 #include "parser.hpp"
 
-std::vector<std::tuple<std::string, std::string, std::string, int>> get_stops_from_trip(const std::string& route_id, const std::string direction_id) {
+std::list<std::tuple<std::string, std::string, std::string, int>> get_stops_from_trip(const std::string& route_id, const std::string direction_id) {
     rapidcsv::Document trips("../gtfs_data/trips.txt", rapidcsv::LabelParams(-1, -1));
     rapidcsv::Document stop_times("../gtfs_data/stop_times.txt", rapidcsv::LabelParams(-1, -1));
     rapidcsv::Document stops("../gtfs_data/stops.txt", rapidcsv::LabelParams(-1, -1));
@@ -13,7 +13,7 @@ std::vector<std::tuple<std::string, std::string, std::string, int>> get_stops_fr
         }
     }
 
-    std::vector<std::tuple<std::string, std::string, std::string, int>> stopsInfo;
+    std::list<std::tuple<std::string, std::string, std::string, int>> stopsInfo;
 
     if (trip_id.empty()) {
         std::cout << "Invalid Route or Direction" << std::endl;
@@ -43,7 +43,7 @@ std::vector<std::tuple<std::string, std::string, std::string, int>> get_stops_fr
     return stopsInfo;
 }
 
-std::string get_coordinates_string_from_stops(const std::vector<std::tuple<std::string, std::string, std::string, int>>& stops) {
+std::string get_coordinates_string_from_stops(const std::list<std::tuple<std::string, std::string, std::string, int>>& stops) {
     std::ostringstream oss;
 
     bool first = true;
