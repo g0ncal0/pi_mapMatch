@@ -91,7 +91,9 @@ bool pointIsInsidePolygon(double lon, double lat, const std::vector<std::pair<do
     int n = polygon.size();
     bool inside = false;
     
-    for (int i = 0, j = n - 1; i < n; j = i++) {
+    for (int i = 0; i < n; i++) {
+        int j = (i + 1) % n;
+
         double x1 = polygon[i].first, y1 = polygon[i].second;
         double x2 = polygon[j].first, y2 = polygon[j].second;
 
@@ -119,9 +121,10 @@ std::string remove_stops_in_excluded_zones(std::list<std::tuple<std::string, std
                 if (!first) oss << ", ";
                 else first = false;
 
-                oss << std::get<2>(*it);
+                oss << std::get<0>(*it);
 
                 it = stops.erase(it);
+                it--;
                 break;
             }
         }
@@ -146,5 +149,5 @@ std::string bus_route(const std::string& routeID, const std::string& directionID
 
     std::string points = get_coordinates_string_from_stops(stops);
 
-    return route_valhalla(points, excludePolygons);
+    return reportRemovedStops + route_valhalla(points, excludePolygons);
 }

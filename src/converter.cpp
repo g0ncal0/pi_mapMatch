@@ -216,5 +216,9 @@ std::vector<std::pair<double, double>> get_exclude_polygon_list(const std::strin
         polygonList.push_back({longitude, latitude});
     }
 
+    if (polygonList.front() == polygonList.back()) {
+        polygonList.pop_back();
+    }
+
     return polygonList;   
 }
