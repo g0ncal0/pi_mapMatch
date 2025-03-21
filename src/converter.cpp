@@ -104,9 +104,10 @@ std::string convert_completeGeoJSON_to_simpleGeoJSON(const std::string& complete
 
     oss << convert_coordinates_to_GeoJSON_feature(coordinates, "LineString", true);
 
-    if (excludePolygons != "") oss << ",";
-
-    oss << get_exclude_polygons_geoJSON_features(excludePolygons);
+    if (excludePolygons != "") {
+        oss << ",";
+        oss << get_exclude_polygons_geoJSON_features(excludePolygons);
+    }
 
     oss << END_SIMPLE_GEOJSON;
 
@@ -178,8 +179,6 @@ std::string get_exclude_polygons_geoJSON_features(const std::string& excludePoly
 
         oss << convert_coordinates_to_GeoJSON_feature(excludePolygon, "Polygon", false);
     }
-
-    oss << "\n  ]\n";
 
     return oss.str();
 }

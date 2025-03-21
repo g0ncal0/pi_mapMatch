@@ -40,10 +40,6 @@ std::vector<std::tuple<std::string, std::string, std::string, int>> get_stops_fr
         else if (already_found) break;
     }
 
-    for (auto tuple : stopsInfo) {
-        std::cout << "ID = " << std::get<0>(tuple) << "   Lat ->  " << std::get<1>(tuple) << "    Lon ->   " << std::get<2>(tuple) << "    Sequence -> " << std::get<3>(tuple) << std::endl;
-    }
-
     return stopsInfo;
 }
 
