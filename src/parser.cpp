@@ -13,11 +13,11 @@ std::vector<std::tuple<std::string, std::string, std::string, int>> get_stops_fr
         }
     }
 
-    std::vector<std::tuple<std::string, std::string, std::string, int>> stopsResults;
+    std::vector<std::tuple<std::string, std::string, std::string, int>> stopsInfo;
 
     if (trip_id.empty()) {
         std::cout << "Invalid Route or Direction" << std::endl;
-        return stopsResults;
+        return stopsInfo;
     }
 
     bool already_found = false;
@@ -32,7 +32,7 @@ std::vector<std::tuple<std::string, std::string, std::string, int>> get_stops_fr
                 if (stops.GetCell<std::string>(0, j) == stop_id) {  // stop_id
                     std::string lat = stops.GetCell<std::string>(3, j); // stop_lat
                     std::string lon = stops.GetCell<std::string>(4, j); // stop_lon
-                    stopsResults.push_back({stop_id, lat, lon, stop_sequence});
+                    stopsInfo.push_back({stop_id, lat, lon, stop_sequence});
                     break;
                 }
             }
@@ -40,9 +40,24 @@ std::vector<std::tuple<std::string, std::string, std::string, int>> get_stops_fr
         else if (already_found) break;
     }
 
-    for (auto tuple : stopsResults) {
+    for (auto tuple : stopsInfo) {
         std::cout << "ID = " << std::get<0>(tuple) << "   Lat ->  " << std::get<1>(tuple) << "    Lon ->   " << std::get<2>(tuple) << "    Sequence -> " << std::get<3>(tuple) << std::endl;
     }
 
-    return stopsResults;
+    return stopsInfo;
+}
+
+std::string get_coordinates_string_from_stops(const std::vector<std::tuple<std::string, std::string, std::string, int>>& stops) {
+    std::ostringstream oss;
+
+    bool first = true;
+
+    for (const auto& stop : stops) {
+        if (!first) oss << ";";
+        else first = false;
+
+        oss << std::get<2>(stop) << "," << std::get<1>(stop);
+    }
+
+    return oss.str();
 }
