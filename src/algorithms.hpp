@@ -4,6 +4,7 @@
 #include <cstring>
 #include "requests.hpp"
 #include "converter.hpp"
+#include "parser.hpp"
 
 bool no_match(const std::string& res);
 
