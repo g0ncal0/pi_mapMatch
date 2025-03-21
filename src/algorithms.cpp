@@ -86,3 +86,11 @@ std::string route_valhalla(const std::string& points, const std::string& exclude
 
     return convert_completeGeoJSON_to_simpleGeoJSON(res, excludePolygons);
 }
+
+std::string bus_route(const std::string& routeID, const std::string& directionID) {
+    std::vector<std::tuple<std::string, std::string, std::string, int>> stops = get_stops_from_trip(routeID, directionID);
+
+    std::string points = get_coordinates_string_from_stops(stops);
+
+    return route_valhalla(points, "");
+}

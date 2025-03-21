@@ -26,8 +26,8 @@ void setup_routes(crow::SimpleApp& app) {
         return route_valhalla(points, excludePolygons);
     });
 
-    CROW_ROUTE(app, "/bus-route/<string>/<string>")([](const std::string& busID, const std::string& pathID){
-        return map_match_valhalla(busID);
+    CROW_ROUTE(app, "/bus-route/<string>/<string>")([](const std::string& routeID, const std::string& directionID){
+        return bus_route(routeID, directionID);
     });
 }
 
