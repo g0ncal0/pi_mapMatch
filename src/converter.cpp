@@ -42,7 +42,7 @@ std::string convert_coordinates_to_formated_GeoJSON_coordinates(const std::strin
     std::ostringstream oss;
 
     size_t pos = coordsFromGeoJSON ? 1 : 0, end = 0, aux_end;
-    std::string_view longitude, latitude;
+    std::string longitude, latitude;
     bool first = true;
 
     char coord_divider_char = ',';
