@@ -65,8 +65,9 @@ std::string convert_completeGeoJSON_to_simpleGeoJSON(const std::string& complete
  * 
  * @param inputCoord A string with the input coordinates
  * @param valhallaCoord The string where the output coordinates wwill be saved
+ * @param radius The radius of the points to be matched in meters. Default is 0
  */
-void convert_input_coordinates_to_valhalla_coordinates(const std::string& inputCoord, std::string& valhallaCoord);
+void convert_input_coordinates_to_valhalla_coordinates(const std::string& inputCoord, std::string& valhallaCoord, int radius = 0);
 
 /**
  * @brief Function to get the json of exclude polygons in the GeoJSON format to be used in the valhalla API

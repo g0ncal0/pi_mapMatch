@@ -114,12 +114,15 @@ std::string convert_completeGeoJSON_to_simpleGeoJSON(const std::string& complete
     return oss.str();
 }
 
-void convert_input_coordinates_to_valhalla_coordinates(const std::string& inputCoord, std::string& valhallaCoord) {
+void convert_input_coordinates_to_valhalla_coordinates(const std::string& inputCoord, std::string& valhallaCoord, int radius) {
     std::ostringstream oss;
     std::istringstream iss(inputCoord);
 
-    std::string lat, lon;
+    std::string lat, lon, radius_str;
     bool first = true;
+
+    if (radius > 0) radius_str = ",\"radius\":" + std::to_string(radius);
+    else radius_str = "";
 
     while (!iss.eof()) {
         if (!first) oss << ',';
@@ -128,7 +131,7 @@ void convert_input_coordinates_to_valhalla_coordinates(const std::string& inputC
         std::getline(iss, lon, ',');
         std::getline(iss, lat, ';');
 
-        oss << "{\"lat\":" << lat << ",\"lon\":" << lon << "}";
+        oss << "{\"lat\":" << lat << ",\"lon\":" << lon << radius_str << "}";
     }
 
     valhallaCoord = oss.str();

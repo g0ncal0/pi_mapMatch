@@ -52,11 +52,11 @@ std::string route(const std::string& points) {
     // TODO: se for para também ter serviço de routes isto não pode ficar assim
 }
 
-std::string map_match_valhalla(const std::string& points) {
+std::string map_match_valhalla(const std::string& points, int radius) {
     char url[500 + points.length()*2] = "http://localhost:8002/trace_route";  // TODO: Tem de ser dinâmico. Pode vir a ser parametrizável
 
     std::string valhallaCoord;
-    convert_input_coordinates_to_valhalla_coordinates(points, valhallaCoord);
+    convert_input_coordinates_to_valhalla_coordinates(points, valhallaCoord, radius);
 
     std::string json = R"({"shape":[)" + valhallaCoord + R"(],"costing":"bus","shape_match":"map_snap","format":"osrm","shape_format":"geojson","narrative":false})";
     std::string res;
@@ -142,12 +142,20 @@ std::string remove_stops_in_excluded_zones(std::list<std::tuple<std::string, std
 }
 
 std::string bus_route(const std::string& routeID, const std::string& directionID, const std::string& excludePolygons) {
+    int stops_radius;
+    if (excludePolygons.empty()) stops_radius = 20;
+    else stops_radius = 0;
+
     std::list<std::tuple<std::string, std::string, std::string, int>> stops = get_stops_from_trip(routeID, directionID);
     std::vector<std::vector<std::pair<double, double>>> excludePolygonsList = get_exclude_polygons_list(excludePolygons);
 
     std::string reportRemovedStops = remove_stops_in_excluded_zones(stops, excludePolygonsList);
 
     std::string points = get_coordinates_string_from_stops(stops);
+
+    if (excludePolygons.empty()) {
+        return map_match_valhalla(points, 20);
+    }
 
     return reportRemovedStops + route_valhalla(points, excludePolygons);
 }
