@@ -144,8 +144,8 @@ std::string remove_stops_in_excluded_zones(std::list<std::tuple<std::string, std
 std::string process_put_stop(const std::string& putInfo, std::list<std::tuple<std::string, std::string, std::string, int>>& stops) {
     auto it = stops.begin();
 
-    std::string stopID = putInfo.substr(putInfo.find_last_of('-')+1);
-    int newStopIndex = stoi(putInfo.substr(2, putInfo.find_last_of('-')-2));
+    std::string stopID = putInfo.substr(putInfo.find_last_of(':')+1);
+    int newStopIndex = stoi(putInfo.substr(2, putInfo.find_last_of(':')-2));
     std::string lat, lon;
     get_coords_from_stop(stopID, lat, lon);
 
@@ -166,7 +166,27 @@ std::string process_put_stop(const std::string& putInfo, std::list<std::tuple<st
 }
 
 std::string process_put_coord(const std::string& putInfo, std::list<std::tuple<std::string, std::string, std::string, int>>& stops) {
-    return "";
+    auto it = stops.begin();
+
+    std::string coords = putInfo.substr(putInfo.find_last_of(':')+1);
+    std::string lat = coords.substr(0, coords.find(','));
+    std::string lon = coords.substr(coords.find(',') + 1);
+    int newStopIndex = stoi(putInfo.substr(2, putInfo.find_last_of(':')-2));
+
+    if (newStopIndex > stops.size()) {
+        return "ERROR: This route don't have that many stops";
+    }
+
+    int i = newStopIndex;
+
+    while (i > 0) {
+        i--;
+        it++;
+    }
+
+    it = stops.insert(it, {"StopTest", lat, lon, newStopIndex});
+
+    return "OK";
 }
 
 std::string process_delete_stop(const std::string& deleteInfo, std::list<std::tuple<std::string, std::string, std::string, int>>& stops) {
