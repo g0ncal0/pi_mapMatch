@@ -29,8 +29,10 @@ void setup_routes(crow::SimpleApp& app) {
     CROW_ROUTE(app, "/bus-route/<string>/<string>")([](const crow::request& req, const std::string& routeID, const std::string& directionID){
         const char* excludePolygonsPtr = req.url_params.get("exclude_polygons");
         std::string excludePolygons = excludePolygonsPtr ? excludePolygonsPtr : "";
+        const char* changesPtr = req.url_params.get("changes");
+        std::string changes = changesPtr ? changesPtr : "";
         
-        return bus_route(routeID, directionID, excludePolygons);
+        return bus_route(routeID, directionID, excludePolygons, changes);
     });
 }
 

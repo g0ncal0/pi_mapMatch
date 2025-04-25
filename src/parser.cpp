@@ -1,10 +1,10 @@
 #include "parser.hpp"
 
-std::list<std::tuple<std::string, std::string, std::string, int>> get_stops_from_trip(const std::string& route_id, const std::string direction_id) {
-    rapidcsv::Document trips("../gtfs_data/trips.txt", rapidcsv::LabelParams(-1, -1));
-    rapidcsv::Document stop_times("../gtfs_data/stop_times.txt", rapidcsv::LabelParams(-1, -1));
-    rapidcsv::Document stops("../gtfs_data/stops.txt", rapidcsv::LabelParams(-1, -1));
+rapidcsv::Document trips("../gtfs_data/trips.txt", rapidcsv::LabelParams(-1, -1));
+rapidcsv::Document stop_times("../gtfs_data/stop_times.txt", rapidcsv::LabelParams(-1, -1));
+rapidcsv::Document stops("../gtfs_data/stops.txt", rapidcsv::LabelParams(-1, -1));
 
+std::list<std::tuple<std::string, std::string, std::string, int>> get_stops_from_trip(const std::string& route_id, const std::string direction_id) {
     std::string trip_id;
     for (size_t i = 0; i < trips.GetRowCount(); i++) {
         if (trips.GetCell<std::string>(0, i) == route_id && trips.GetCell<std::string>(1, i) == direction_id) {  // route_id and direction
@@ -56,4 +56,14 @@ std::string get_coordinates_string_from_stops(const std::list<std::tuple<std::st
     }
 
     return oss.str();
+}
+
+void get_coords_from_stop(const std::string stopID, std::string& lat, std::string& lon) {
+    for (size_t i = 0; i < stops.GetRowCount(); i++) {
+        if (stops.GetCell<std::string>(0, i) == stopID) {  // stop_id
+            lat = stops.GetCell<std::string>(3, i); // stop_lat
+            lon = stops.GetCell<std::string>(4, i); // stop_lon
+            break;
+        }
+    }
 }

@@ -69,7 +69,7 @@ std::string route_valhalla(const std::string& points, const std::string& exclude
  * @param excludePolygons A string with all the polygons to be excluded in a format like "[-8.598872,41.167089;-8.601544,41.167101;-8.602729,41.165494;-8.606549,41.166443],[-8.598872,41.167089;-8.601544,41.167101;-8.602729,41.165494;-8.606549,41.166443]"
  * @return std::string A string with all excluded stops (collided with one or more excluded zones) if needed and then the contents of the route adjusted to the map in GeoJSON format ready to be used in tools like https://geojson.io/
  */
-std::string bus_route(const std::string& routeID, const std::string& directionID, const std::string& excludePolygons);
+std::string bus_route(const std::string& routeID, const std::string& directionID, const std::string& excludePolygons, const std::string& changes);
 
 /**
  * @brief A function to check if a point is inside a polygon. It uses the ray-casting algorithm.
@@ -89,5 +89,8 @@ bool pointIsInsidePolygon(double lon, double lat, const std::vector<std::pair<do
  * @return std::string with the information of the stops that were removed
  */
 std::string remove_stops_in_excluded_zones(std::list<std::tuple<std::string, std::string, std::string, int>>& stops, const std::vector<std::vector<std::pair<double, double>>>& excludePolygons);
+
+// TODO: doc istoooooo
+std::string process_changes(const std::string& changes, std::list<std::tuple<std::string, std::string, std::string, int>>& stops);
 
 #endif

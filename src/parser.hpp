@@ -20,3 +20,6 @@ std::list<std::tuple<std::string, std::string, std::string, int>> get_stops_from
  * @return std::string with the stops coordinates in the API format
  */
 std::string get_coordinates_string_from_stops(const std::list<std::tuple<std::string, std::string, std::string, int>>& stops);
+
+// TODO: doc isto
+void get_coords_from_stop(const std::string stopID, std::string& lat, std::string& lon);

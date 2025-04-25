@@ -141,16 +141,68 @@ std::string remove_stops_in_excluded_zones(std::list<std::tuple<std::string, std
     return "";
 }
 
-std::string bus_route(const std::string& routeID, const std::string& directionID, const std::string& excludePolygons) {
+std::string process_put_stop(const std::string& putInfo, std::list<std::tuple<std::string, std::string, std::string, int>>& stops) {
+    auto it = stops.begin();
+
+    std::string stopID = putInfo.substr(putInfo.find_last_of('-')+1);
+    int newStopIndex = stoi(putInfo.substr(2, putInfo.find_last_of('-')-2));
+    std::string lat, lon;
+    get_coords_from_stop(stopID, lat, lon);
+
+    if (newStopIndex > stops.size()) {
+        return "ERROR: This route don't have that many stops";
+    }
+
+    int i = newStopIndex;
+
+    while (i > 0) {
+        i--;
+        it++;
+    }
+
+    it = stops.insert(it, {stopID, lat, lon, newStopIndex});
+
+    return "OK";
+}
+
+std::string process_put_coord(const std::string& putInfo, std::list<std::tuple<std::string, std::string, std::string, int>>& stops) {
+    return "";
+}
+
+std::string process_delete_stop(const std::string& deleteInfo, std::list<std::tuple<std::string, std::string, std::string, int>>& stops) {
+    return "";
+}
+
+std::string process_changes(const std::string& changes, std::list<std::tuple<std::string, std::string, std::string, int>>& stops) {
+    size_t pos = 0, end;
+    std::string change;
+
+    while (end != std::string::npos) {
+        end = changes.find(';', pos);
+        change = changes.substr(pos, end - pos);
+        pos = end + 1;
+
+        if (change.front() == 'P') process_put_stop(change, stops);
+        else if (change.front() == 'C') process_put_coord(change, stops);
+        else if (change.front() == 'D') process_delete_stop(change, stops);
+        else {
+            std::cerr << "Error: Unknown change type: " << change.front() << std::endl;
+            return "Error: Unknown change type";
+        }
+    }
+
+    return "OK";
+}
+
+std::string bus_route(const std::string& routeID, const std::string& directionID, const std::string& excludePolygons, const std::string& changes) {
     int stops_radius;
     if (excludePolygons.empty()) stops_radius = 20;
     else stops_radius = 0;
 
     std::list<std::tuple<std::string, std::string, std::string, int>> stops = get_stops_from_trip(routeID, directionID);
     std::vector<std::vector<std::pair<double, double>>> excludePolygonsList = get_exclude_polygons_list(excludePolygons);
-
     std::string reportRemovedStops = remove_stops_in_excluded_zones(stops, excludePolygonsList);
-
+    process_changes(changes, stops);
     std::string points = get_coordinates_string_from_stops(stops);
 
     if (excludePolygons.empty()) {
