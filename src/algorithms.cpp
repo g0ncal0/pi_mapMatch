@@ -190,7 +190,21 @@ std::string process_put_coord(const std::string& putInfo, std::list<std::tuple<s
 }
 
 std::string process_delete_stop(const std::string& deleteInfo, std::list<std::tuple<std::string, std::string, std::string, int>>& stops) {
-    return "";
+    auto it = stops.begin();
+
+    std::string stopID = deleteInfo.substr(deleteInfo.find_last_of(':')+1);
+    std::string auxStopId;
+
+    while (it != stops.end()) {
+        auxStopId = std::get<0>(*it);
+        if (auxStopId == stopID) {
+            stops.erase(it);
+            return "OK";
+        }
+        it++;
+    }
+
+    return "ERROR: That stop doesnt exist in this route!";
 }
 
 std::string process_changes(const std::string& changes, std::list<std::tuple<std::string, std::string, std::string, int>>& stops) {
