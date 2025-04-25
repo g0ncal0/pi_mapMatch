@@ -35,4 +35,7 @@ Rota bus -> 508
 http://127.0.0.1:18080/bus-route/508/0
 
 Rota 204 com mais 2 paragens no inicio -> ST1 e IPO4
-http://127.0.0.1:18080/bus-route/204/0?changes=%22P-0-IPO4;P-0-ST1%22
+http://127.0.0.1:18080/bus-route/204/0?changes=P:0:IPO4;P:0:ST1
+
+Rota 204 com mais 2 paragens no inicio (a usar as coords em vez do stop id) -> ST1 e IPO4
+http://127.0.0.1:18080/bus-route/204/0?changes=C:0:41.1839151435425,-8.60438677565646;C:0:41.1557756241619,-8.65452205765523
