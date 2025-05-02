@@ -97,35 +97,67 @@ paths:
   /bus-route/{routeID}/{directionID}:
     get:
       summary: "Gets a bus route"
-      description: "Takes a route ID and direction ID and returns the bus route in GeoJSON format. Optionally excludes polygons."
+      description: >
+        Takes a route ID and direction ID and returns the bus route in GeoJSON format.  
+        You can optionally exclude specific polygons from the route or request changes to the route path.
+        
+        - **Direction ID:** '0' for outbound, '1' for inbound.
+        - **Exclude Polygons:** String in GeoJSON format representing one or more polygons to avoid.
+        - **Changes:** Custom modification string to apply alterations to the default route.
       parameters:
         - in: path
           name: routeID
           required: true
           schema:
             type: string
-          description: "The ID of the bus route."
+          description: "The ID of the bus route (e.g., '204')."
         - in: path
           name: directionID
           required: true
           schema:
             type: string
-          description: "The direction ID of the bus route."
+            enum: ["0", "1"]
+          description: "The direction of the bus route: 0 for outbound, 1 for inbound."
         - in: query
           name: exclude_polygons
           required: false
           schema:
             type: string
-          description: "Polygons to exclude in GeoJSON format."
+          description: >
+            A string with polygons in format -> '[lat1,lon1;lat2,lon2;...],[lat3,lon3;lat3,lon3;...],...'.
+            Each polygon is inside [] and separated by commas. Each coordinate of a polygon is separated by a semicolon. 
+            Example: [-8.65846,41.15493;-8.65699,41.14897;-8.64629,41.14919;-8.64819,41.15873;-8.65846,41.15493],[-8.62147,41.18535;-8.61873,41.17889;-8.60784,41.18138;-8.61069,41.18773;-8.62147,41.18535]
+        - in: query
+          name: changes
+          required: false
+          schema:
+            type: string
+          description: >
+            A string with all changes to apply to the route in this format: 
+              Each change is sepated by semicolon. Each parameter of a change is separated by a colon (:). Each change can be of the type 'PutSop', 'PutCoords' and 'DeleteStop'.
+                'PutStop' -> 'P:ID:Order' -> To put a existing stop in the route.
+                  'P' is the type of change
+                  'ID' is the ID of the stop to add
+                  'Order' is the index od this new stop in the route
+                'PutCoords' -> 'C:Coords:Order' -> To put a stop in the route but with its coordinates (so can be a stop that does not exist yet)
+                  'C' is the type of change
+                  'Coords' are the coordinates of the stop and they are in this format -> 'lat,lon'
+                  'Order' is the index od this new stop in the route
+                'DeleteStop' -> 'D:ID' -> To delete a stop from the route.
+                  'D' is the type of change
+                  'ID' is the ID of the stop to delete
+              Example: P:204:0;C:41.18,-8.60:1;D:OUTE3
+            The changes are applied in the order they are given, the user needs to be careful with this.
       responses:
         '200':
-          description: "Bus route result"
+          description: "Bus route result. If any stop was excluded due to the exclude polygons, that information will be presented in the first line of the response."
           content:
             application/geo+json:
               schema:
                 $ref: '#/components/schemas/GeoJSON'
         '400':
           description: "Invalid parameter"
+
 
 components:
   schemas:
