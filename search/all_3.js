@@ -1,0 +1,4 @@
+var searchData=
+[
+  ['document_17',['Document',['../classrapidcsv_1_1Document.html#a3c8a1c6cc0deeb5e57f0db75ccb52878',1,'rapidcsv::Document::Document(const std::string &amp;pPath=std::string(), const LabelParams &amp;pLabelParams=LabelParams(), const SeparatorParams &amp;pSeparatorParams=SeparatorParams(), const ConverterParams &amp;pConverterParams=ConverterParams(), const LineReaderParams &amp;pLineReaderParams=LineReaderParams())'],['../classrapidcsv_1_1Document.html#ae340e319fcc66598df359b780f768346',1,'rapidcsv::Document::Document(std::istream &amp;pStream, const LabelParams &amp;pLabelParams=LabelParams(), const SeparatorParams &amp;pSeparatorParams=SeparatorParams(), const ConverterParams &amp;pConverterParams=ConverterParams(), const LineReaderParams &amp;pLineReaderParams=LineReaderParams())'],['../classrapidcsv_1_1Document.html',1,'rapidcsv::Document']]]
+];
