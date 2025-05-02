@@ -90,7 +90,40 @@ bool pointIsInsidePolygon(double lon, double lat, const std::vector<std::pair<do
  */
 std::string remove_stops_in_excluded_zones(std::list<std::tuple<std::string, std::string, std::string, int>>& stops, const std::vector<std::vector<std::pair<double, double>>>& excludePolygons);
 
-// TODO: doc istoooooo
+/**
+ * @brief function to process one change made to the route that is putting a new (already existing) stop to the route
+ * 
+ * @param putInfo the information of the stop (stopID) and where to put it
+ * @param stops the list with original stops of the route (and where the changes will be made)
+ * @return std::string "OK" if everything went well
+ */
+std::string process_put_stop(const std::string& putInfo, std::list<std::tuple<std::string, std::string, std::string, int>>& stops);
+
+/**
+ * @brief function to process one change made to the route that is putting a new stop to the route (with the coords of it)
+ * 
+ * @param putInfo the information of the stop (coordinates) and where to put it
+ * @param stops the list with original stops of the route (and where the changes will be made)
+ * @return std::string "OK" if everything went well
+ */
+std::string process_put_coord(const std::string& putInfo, std::list<std::tuple<std::string, std::string, std::string, int>>& stops);
+
+/**
+ * @brief function to process one change made to the route that is deleting a stop from the route
+ * 
+ * @param deleteInfo the information of the stop to be removed (stopID)
+ * @param stops the list with original stops of the route (and where the changes will be made)
+ * @return std::string "OK" if everything went well
+ */
+std::string process_delete_stop(const std::string& deleteInfo, std::list<std::tuple<std::string, std::string, std::string, int>>& stops);
+
+/**
+ * @brief Function to process all the changes made to one route
+ * 
+ * @param changes a formatted string with all the changes made to the route
+ * @param stops the list with original stops of the route (and where the changes will be made)
+ * @return std::string "OK" if everything went well
+ */
 std::string process_changes(const std::string& changes, std::list<std::tuple<std::string, std::string, std::string, int>>& stops);
 
 #endif

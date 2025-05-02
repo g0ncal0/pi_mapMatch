@@ -21,5 +21,11 @@ std::list<std::tuple<std::string, std::string, std::string, int>> get_stops_from
  */
 std::string get_coordinates_string_from_stops(const std::list<std::tuple<std::string, std::string, std::string, int>>& stops);
 
-// TODO: doc isto
+/**
+ * @brief Get the coords from one specific stop
+ * 
+ * @param stopID the ID of the stop
+ * @param lat where to store the latitude of the stop
+ * @param lon where to store the longitude of the stop
+ */
 void get_coords_from_stop(const std::string stopID, std::string& lat, std::string& lon);
