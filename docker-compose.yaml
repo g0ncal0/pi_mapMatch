@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  valhalla:
+    image: ghcr.io/valhalla/valhalla:latest
+    container_name: valhalla_container
+    ports:
+      - "8002:8002"
+    volumes:
+      - ./data:/data
+    command: valhalla_service /data/valhalla.json 1
+
+  mapmatcher:
+    build: .
+    depends_on:
+      - valhalla
+    volumes:
+      - ./data:/data
+    ports:
+      - "18080:18080"

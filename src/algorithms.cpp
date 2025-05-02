@@ -53,6 +53,8 @@ std::string route(const std::string& points) {
 }
 
 std::string map_match_valhalla(const std::string& points, int radius) {
+    // When running the project localy the URL should be with "localhost" -> "http://localhost:8002/trace_route"
+    // When running the project with docker the URL should be with "valhalla" -> "http://valhalla:8002/trace_route"
     char url[500 + points.length()*2] = "http://localhost:8002/trace_route";  // TODO: Tem de ser dinâmico. Pode vir a ser parametrizável
 
     std::string valhallaCoord;
@@ -69,6 +71,8 @@ std::string map_match_valhalla(const std::string& points, int radius) {
 }
 
 std::string route_valhalla(const std::string& points, const std::string& excludePolygons) {
+    // When running the project localy the URL should be with "localhost" -> "http://localhost:8002/route"
+    // When running the project with docker the URL should be with "valhalla" -> "http://valhalla:8002/route"
     char url[500 + points.length()*2 + excludePolygons.length()*2] = "http://localhost:8002/route";
 
     std::string valhallaCoord;
