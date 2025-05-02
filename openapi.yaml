@@ -4,103 +4,161 @@ info:
   description: API for map matching and routing
   version: 1.0.0
 paths:
-  /map-match/{points}:
+  /map-match/osrm/{points}:
     get:
-      summary: "Performs map matching"
-      description: "Takes a set of points and returns the result of the map matching in GeoJSON format ready to be used in geojson.io"
+      summary: "Performs map matching using OSRM"
+      description: "Takes a set of points and returns the result of the map matching in GeoJSON format using the OSRM API."
       parameters:
         - in: path
           name: points
           required: true
           schema:
             type: string
-          description: "Points for map matching."
+          description: "Points for map matching in the format '-8.598872,41.167089;-8.601544,41.167101'."
       responses:
         '200':
           description: "Map matching result"
           content:
             application/geo+json:
               schema:
-                type: object
-                description: "GeoJSON formatted data representing the matched route"
-                properties:
-                  type:
-                    type: string
-                    example: "FeatureCollection"
-                  features:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        type:
-                          type: string
-                          example: "Feature"
-                        geometry:
-                          type: object
-                          properties:
-                            type:
-                              type: string
-                              example: "LineString"
-                            coordinates:
-                              type: array
-                              items:
-                                type: array
-                                items:
-                                  type: number
-                                  example: -8.598169
-                        properties:
-                          type: object
-                          additionalProperties: true
-                          description: "Additional properties can be added here"
+                $ref: '#/components/schemas/GeoJSON'
         '400':
           description: "Invalid parameter"
-  /route/{points}:
+
+  /route/osrm/{points}:
     get:
-      summary: "Gets a route"
-      description: "Takes a set of points and returns a route in GeoJSON format ready to be used in geojson.io"
+      summary: "Gets a route using OSRM"
+      description: "Takes a set of points and returns a route in GeoJSON format using the OSRM API."
       parameters:
         - in: path
           name: points
           required: true
           schema:
             type: string
-          description: "Points to calculate the route."
+          description: "Points to calculate the route in the format '-8.598872,41.167089;-8.601544,41.167101'."
+      responses:
+        '200':
+          description: "Routing result"
+          content:
+            application/geo+json:
+              schema:
+                $ref: '#/components/schemas/GeoJSON'
+        '400':
+          description: "Invalid parameter"
+
+  /map-match/valhalla/{points}:
+    get:
+      summary: "Performs map matching using Valhalla"
+      description: "Takes a set of points and returns the result of the map matching in GeoJSON format using the Valhalla API."
+      parameters:
+        - in: path
+          name: points
+          required: true
+          schema:
+            type: string
+          description: "Points for map matching in the format '-8.598872,41.167089;-8.601544,41.167101'."
       responses:
         '200':
           description: "Map matching result"
           content:
             application/geo+json:
               schema:
-                type: object
-                description: "GeoJSON formatted data representing the matched route"
-                properties:
-                  type:
-                    type: string
-                    example: "FeatureCollection"
-                  features:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        type:
-                          type: string
-                          example: "Feature"
-                        geometry:
-                          type: object
-                          properties:
-                            type:
-                              type: string
-                              example: "LineString"
-                            coordinates:
-                              type: array
-                              items:
-                                type: array
-                                items:
-                                  type: number
-                                  example: -8.598169
-                        properties:
-                          type: object
-                          additionalProperties: true
-                          description: "Additional properties can be added here"
+                $ref: '#/components/schemas/GeoJSON'
         '400':
           description: "Invalid parameter"
+
+  /route/valhalla/{points}:
+    get:
+      summary: "Gets a route using Valhalla"
+      description: "Takes a set of points and returns a route in GeoJSON format using the Valhalla API. Optionally excludes polygons."
+      parameters:
+        - in: path
+          name: points
+          required: true
+          schema:
+            type: string
+          description: "Points to calculate the route in the format '-8.598872,41.167089;-8.601544,41.167101'."
+        - in: query
+          name: exclude_polygons
+          required: false
+          schema:
+            type: string
+          description: "Polygons to exclude in GeoJSON format."
+      responses:
+        '200':
+          description: "Routing result"
+          content:
+            application/geo+json:
+              schema:
+                $ref: '#/components/schemas/GeoJSON'
+        '400':
+          description: "Invalid parameter"
+
+  /bus-route/{routeID}/{directionID}:
+    get:
+      summary: "Gets a bus route"
+      description: "Takes a route ID and direction ID and returns the bus route in GeoJSON format. Optionally excludes polygons."
+      parameters:
+        - in: path
+          name: routeID
+          required: true
+          schema:
+            type: string
+          description: "The ID of the bus route."
+        - in: path
+          name: directionID
+          required: true
+          schema:
+            type: string
+          description: "The direction ID of the bus route."
+        - in: query
+          name: exclude_polygons
+          required: false
+          schema:
+            type: string
+          description: "Polygons to exclude in GeoJSON format."
+      responses:
+        '200':
+          description: "Bus route result"
+          content:
+            application/geo+json:
+              schema:
+                $ref: '#/components/schemas/GeoJSON'
+        '400':
+          description: "Invalid parameter"
+
+components:
+  schemas:
+    GeoJSON:
+      type: object
+      description: "GeoJSON formatted data"
+      properties:
+        type:
+          type: string
+          example: "FeatureCollection"
+        features:
+          type: array
+          items:
+            type: object
+            properties:
+              type:
+                type: string
+                example: "Feature"
+              geometry:
+                type: object
+                properties:
+                  type: string
+                  enum:
+                    - "LineString"
+                    - "Polygon"
+                  coordinates:
+                    type: array
+                    items:
+                      type: array
+                      items:
+                        type: number
+                        example: -8.598169
+              properties:
+                type: object
+                additionalProperties: true
+                description: "Additional properties can be added here"
