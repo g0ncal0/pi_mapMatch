@@ -179,10 +179,9 @@ components:
               geometry:
                 type: object
                 properties:
-                  type: string
-                  enum:
-                    - "LineString"
-                    - "Polygon"
+                  type:
+                    type: string
+                    enum: ["LineString", "Polygon"]
                   coordinates:
                     type: array
                     items:
@@ -190,7 +189,13 @@ components:
                       items:
                         type: number
                         example: -8.598169
+                required:
+                  - type
+                  - coordinates
               properties:
                 type: object
                 additionalProperties: true
                 description: "Additional properties can be added here"
+            required:
+              - type
+              - geometry
