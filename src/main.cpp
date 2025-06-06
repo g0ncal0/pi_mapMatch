@@ -8,11 +8,11 @@ void setup_routes(crow::SimpleApp& app) {
     });
 
     CROW_ROUTE(app, "/map-match/osrm/<string>")([](const std::string& points){
-        return map_match(points);
+        return map_match_osrm(points);
     });
 
     CROW_ROUTE(app, "/route/osrm/<string>")([](const std::string& points){
-        return route(points);
+        return route_osrm(points);
     });
 
     CROW_ROUTE(app, "/map-match/valhalla/<string>")([](const std::string& points){

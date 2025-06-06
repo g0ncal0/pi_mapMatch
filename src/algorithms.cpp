@@ -4,11 +4,11 @@ bool no_match(const std::string& res) {
     return (res.find("NoMatch") != std::string::npos);
 }
 
-std::string map_match(const std::string& points) {
+std::string map_match_osrm(const std::string& points) {
     const char* points_char = points.c_str();
-    char url[150 + points.length()] = "http://router.project-osrm.org/match/v1/driving/";  // TODO: Tem de ser dinâmico. Pode vir a ser parametrizável
+    char url[150 + points.length()] = "http://router.project-osrm.org/match/v1/driving/";
     strcat(url, points_char);
-    strcat(url, "?steps=false&geometries=geojson&overview=full&annotations=false"); // TODO: Pode vir a ser parametrizável
+    strcat(url, "?steps=false&geometries=geojson&overview=full&annotations=false");
 
     std::string res;
 
@@ -31,11 +31,11 @@ std::string map_match(const std::string& points) {
     return convert_completeGeoJSON_to_simpleGeoJSON(res, "");
 }
 
-std::string route(const std::string& points) {
+std::string route_osrm(const std::string& points) {
     const char* points_char = points.c_str();
-    char url[150 + points.length()] = "http://router.project-osrm.org/route/v1/driving/";  // TODO: Tem de ser dinâmico. Pode vir a ser parametrizável
+    char url[150 + points.length()] = "http://router.project-osrm.org/route/v1/driving/";
     strcat(url, points_char);
-    strcat(url, "?steps=false&geometries=geojson&overview=simplified&annotations=false"); // TODO: Pode vir a ser parametrizável
+    strcat(url, "?steps=false&geometries=geojson&overview=simplified&annotations=false");
 
     std::string res;
 
