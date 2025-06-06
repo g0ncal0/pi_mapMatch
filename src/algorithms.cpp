@@ -17,15 +17,7 @@ std::string map_match_osrm(const std::string& points) {
     }
 
     if (no_match(res)) {
-        std::string geoJSON = route(points);
-        std::string coord, reqCoord;
-
-        get_coordinates_from_GeoJson(geoJSON, coord);
-
-        convert_GeoJSON_coordinates_to_request_coordinates(coord, reqCoord);
-
-        return map_match(reqCoord);       // TODO: tem de ser dada informação que não é um map matching normal
-        // TODO: isto é um bocado disparate porque a route com overview full fica praticamente igual ao que estou a fazer e deve ser mais rápido -> Verificar se compensa ou não
+        return "Error: No Match Found";
     }
 
     return convert_completeGeoJSON_to_simpleGeoJSON(res, "");
