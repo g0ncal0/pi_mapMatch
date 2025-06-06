@@ -225,3 +225,12 @@ std::vector<std::pair<double, double>> get_exclude_polygon_list(const std::strin
 
     return polygonList;   
 }
+
+void extract_json_field(const std::string& json_str, const std::string& key, std::string& value) {
+    size_t key_pos = json_str.find("\"" + key + "\":");
+    if (key_pos == std::string::npos) return;
+
+    size_t start = json_str.find('"', key_pos + key.length() + 2) + 1;
+    size_t end = json_str.find('"', start);
+    value = json_str.substr(start, end - start);
+}

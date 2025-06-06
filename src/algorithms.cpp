@@ -10,7 +10,7 @@ std::string map_match_osrm(const std::string& points) {
     strcat(url, points_char);
     strcat(url, "?steps=false&geometries=geojson&overview=full&annotations=false");
 
-    std::string res;
+    std::string res, code, message;
 
     if (make_request(url, "", res) != 0) {
         return "Error: Bad Request";
@@ -18,6 +18,18 @@ std::string map_match_osrm(const std::string& points) {
 
     if (no_match(res)) {
         return "Error: No Match Found";
+    }
+
+    // Extract code and message from the response
+    extract_json_field(res, "code", code);
+    if (code != "Ok") {
+        extract_json_field(res, "message", message);
+
+        if (code == "InvalidQuery") {
+            return "Error: The input is not valid. Please check the coordinates format.";
+        }
+
+        return "Error: " + code + " -> " + message;
     }
 
     return convert_completeGeoJSON_to_simpleGeoJSON(res, "");
@@ -29,7 +41,7 @@ std::string route_osrm(const std::string& points) {
     strcat(url, points_char);
     strcat(url, "?steps=false&geometries=geojson&overview=simplified&annotations=false");
 
-    std::string res;
+    std::string res, code, message;
 
     if (make_request(url, "", res) != 0) {
         return "Error: Bad Request";
@@ -39,9 +51,19 @@ std::string route_osrm(const std::string& points) {
         return "Error: No Match Found";
     }
 
-    return convert_completeGeoJSON_to_simpleGeoJSON(res, "");
+    // Extract code and message from the response
+    extract_json_field(res, "code", code);
+    if (code != "Ok") {
+        extract_json_field(res, "message", message);
 
-    // TODO: se for para também ter serviço de routes isto não pode ficar assim
+        if (code == "InvalidQuery") {
+            return "Error: The input is not valid. Please check the coordinates format.";
+        }
+
+        return "Error: " + code + " -> " + message;
+    }
+
+    return convert_completeGeoJSON_to_simpleGeoJSON(res, "");
 }
 
 std::string map_match_valhalla(const std::string& points, int radius) {

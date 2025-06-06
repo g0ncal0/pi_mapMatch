@@ -101,4 +101,6 @@ std::vector<std::vector<std::pair<double, double>>> get_exclude_polygons_list(co
  */
 std::vector<std::pair<double, double>> get_exclude_polygon_list(const std::string& excludePolygon);
 
+void extract_json_field(const std::string& json_str, const std::string& key, std::string& value);
+
 #endif 
