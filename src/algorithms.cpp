@@ -102,6 +102,10 @@ std::string route_valhalla(const std::string& points, const std::string& exclude
     if (!check_points_format(points)) {
         return "Error: Invalid points format. Please use the format 'longitude,latitude;longitude,latitude;...'";
     }
+
+    if (!check_polygons_format(excludePolygons)) {
+        return "Error: Invalid exclude ploygons format. Please use the format '[longitude,latitude;longitude,latitude;...],[longitude,latitude;longitude,latitude;...],...'";
+    }
     
     // When running the project localy the URL should be with "localhost" -> "http://localhost:8002/route"
     // When running the project with docker the URL should be with "valhalla" -> "http://valhalla:8002/route"

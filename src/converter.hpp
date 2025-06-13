@@ -106,4 +106,6 @@ void extract_json_field(const std::string& json_str, const std::string& key, std
 
 bool check_points_format(const std::string& points);
 
+bool check_polygons_format(const std::string& polygons);
+
 #endif 

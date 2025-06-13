@@ -244,3 +244,17 @@ bool check_points_format(const std::string& points) {
 
     return true;
 }
+
+bool check_polygons_format(const std::string& polygons) {
+    std::string points_format = "(-?\\d+(\\.\\d+)?,-?\\d+(\\.\\d+)?)(;-?\\d+(\\.\\d+)?,-?\\d+(\\.\\d+)?)*";
+    std::string polygon_format = "\\[" + points_format + "\\]";
+    std::string full_pattern = "^" + polygon_format + "(," + polygon_format + ")*$";
+
+    std::regex pattern(full_pattern);
+
+    if (!std::regex_match(polygons, pattern) && polygons != "") {
+        return false;
+    }
+
+    return true;
+}
