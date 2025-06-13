@@ -274,6 +274,11 @@ std::string bus_route(const std::string& routeID, const std::string& directionID
     else stops_radius = 0;
 
     std::list<std::tuple<std::string, std::string, std::string, int>> stops = get_stops_from_trip(routeID, directionID);
+
+    if (stops.empty()) {
+        return "Error: Invalid Route or Direction";
+    }
+
     std::vector<std::vector<std::pair<double, double>>> excludePolygonsList = get_exclude_polygons_list(excludePolygons);
     std::string reportRemovedStops = remove_stops_in_excluded_zones(stops, excludePolygonsList);
     process_changes(changes, stops);
