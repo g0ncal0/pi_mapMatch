@@ -234,3 +234,13 @@ void extract_json_field(const std::string& json_str, const std::string& key, std
     size_t end = json_str.find('"', start);
     value = json_str.substr(start, end - start);
 }
+
+bool check_points_format(const std::string& points) {
+    std::regex pattern("^(-?\\d+(\\.\\d+)?,-?\\d+(\\.\\d+)?)(;-?\\d+(\\.\\d+)?,-?\\d+(\\.\\d+)?)*$");
+
+    if (!std::regex_match(points, pattern)) {
+        return false;
+    }
+
+    return true;
+}

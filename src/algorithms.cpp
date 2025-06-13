@@ -6,6 +6,11 @@ bool no_match(const std::string& res) {
 
 std::string map_match_osrm(const std::string& points) {
     const char* points_char = points.c_str();
+
+    if (!check_points_format(points)) {
+        return "Error: Invalid points format. Please use the format 'longitude,latitude;longitude,latitude;...'";
+    }
+
     char url[150 + points.length()] = "http://router.project-osrm.org/match/v1/driving/";
     strcat(url, points_char);
     strcat(url, "?steps=false&geometries=geojson&overview=full&annotations=false");
@@ -37,6 +42,11 @@ std::string map_match_osrm(const std::string& points) {
 
 std::string route_osrm(const std::string& points) {
     const char* points_char = points.c_str();
+
+    if (!check_points_format(points)) {
+        return "Error: Invalid points format. Please use the format 'longitude,latitude;longitude,latitude;...'";
+    }
+
     char url[150 + points.length()] = "http://router.project-osrm.org/route/v1/driving/";
     strcat(url, points_char);
     strcat(url, "?steps=false&geometries=geojson&overview=simplified&annotations=false");
@@ -67,9 +77,13 @@ std::string route_osrm(const std::string& points) {
 }
 
 std::string map_match_valhalla(const std::string& points, int radius) {
+    if (!check_points_format(points)) {
+        return "Error: Invalid points format. Please use the format 'longitude,latitude;longitude,latitude;...'";
+    }
+    
     // When running the project localy the URL should be with "localhost" -> "http://localhost:8002/trace_route"
     // When running the project with docker the URL should be with "valhalla" -> "http://valhalla:8002/trace_route"
-    char url[500 + points.length()*2] = "http://localhost:8002/trace_route";  // TODO: Tem de ser dinâmico. Pode vir a ser parametrizável
+    char url[500 + points.length()*2] = "http://localhost:8002/trace_route";
 
     std::string valhallaCoord;
     convert_input_coordinates_to_valhalla_coordinates(points, valhallaCoord, radius);
@@ -85,6 +99,10 @@ std::string map_match_valhalla(const std::string& points, int radius) {
 }
 
 std::string route_valhalla(const std::string& points, const std::string& excludePolygons) {
+    if (!check_points_format(points)) {
+        return "Error: Invalid points format. Please use the format 'longitude,latitude;longitude,latitude;...'";
+    }
+    
     // When running the project localy the URL should be with "localhost" -> "http://localhost:8002/route"
     // When running the project with docker the URL should be with "valhalla" -> "http://valhalla:8002/route"
     char url[500 + points.length()*2 + excludePolygons.length()*2] = "http://localhost:8002/route";
