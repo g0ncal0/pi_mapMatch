@@ -95,10 +95,10 @@ std::string map_match_valhalla(const std::string& points, int radius) {
         return "Error: Bad Request";
     }
 
-    return convert_completeGeoJSON_to_simpleGeoJSON(res, "");
+    return connect_map_match_result(res);
 }
 
-std::string route_valhalla(const std::string& points, const std::string& excludePolygons) {
+std::string route_valhalla(const std::string& points, const std::string& excludePolygons, bool isAux) {
     if (!check_points_format(points)) {
         return "Error: Invalid points format. Please use the format 'longitude,latitude;longitude,latitude;...'";
     }
@@ -123,6 +123,8 @@ std::string route_valhalla(const std::string& points, const std::string& exclude
     if (make_request(url, json, res) != 0) {
         return "Error: Bad Request";
     }
+
+    if (isAux) return res;
 
     return convert_completeGeoJSON_to_simpleGeoJSON(res, excludePolygons);
 }
@@ -289,4 +291,37 @@ std::string bus_route(const std::string& routeID, const std::string& directionID
     }
 
     return reportRemovedStops + route_valhalla(points, excludePolygons);
+}
+
+std::string connect_map_match_result(const std::string& completeGeoJSON) {
+    std::string coordinates_final, coordinates, coordinates_route, aux_res, last_point, next_point, points_route_request, route_res;
+
+    std::string completeGeoJSON_copy = completeGeoJSON;
+
+    bool first = true;
+
+    while (completeGeoJSON_copy.find("coordinates") != std::string::npos) {
+        get_coordinates_from_GeoJson(completeGeoJSON_copy, coordinates);
+
+        completeGeoJSON_copy = completeGeoJSON_copy.substr(completeGeoJSON_copy.find("]]") + 2);
+
+        if (first) {
+            coordinates_final = coordinates;
+            first = false;
+            continue;
+        }
+
+        last_point = coordinates_final.substr(coordinates_final.find_last_of('[') + 1, coordinates_final.length() - coordinates_final.find_last_of('[') - 2);
+        next_point = coordinates.substr(1, coordinates.find(']') - 1);
+
+        points_route_request = last_point + ';' + next_point;
+
+        route_res = route_valhalla(points_route_request, "", true);
+
+        get_coordinates_from_GeoJson(route_res, coordinates_route);
+
+        coordinates_final += "," + coordinates_route + "," + coordinates;
+    }
+
+    return create_GeoJSON(coordinates_final, "");
 }

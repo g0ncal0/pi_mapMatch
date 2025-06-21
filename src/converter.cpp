@@ -91,13 +91,7 @@ std::string convert_coordinates_to_GeoJSON_feature(const std::string& coordinate
     return oss.str();
 }
 
-std::string convert_completeGeoJSON_to_simpleGeoJSON(const std::string& completeGeoJSON, const std::string& excludePolygons) {
-    std::string coordinates, aux_res;
-
-    aux_res = get_coordinates_from_GeoJson(completeGeoJSON, coordinates);
-
-    if (aux_res != "OK") return aux_res;
-
+std::string create_GeoJSON(const std::string& coordinates, const std::string& excludePolygons) {
     std::ostringstream oss;
 
     oss << BEGIN_SIMPLE_GEOJSON;
@@ -112,6 +106,16 @@ std::string convert_completeGeoJSON_to_simpleGeoJSON(const std::string& complete
     oss << END_SIMPLE_GEOJSON;
 
     return oss.str();
+}
+
+std::string convert_completeGeoJSON_to_simpleGeoJSON(const std::string& completeGeoJSON, const std::string& excludePolygons) {
+    std::string coordinates, aux_res;
+
+    aux_res = get_coordinates_from_GeoJson(completeGeoJSON, coordinates);
+
+    if (aux_res != "OK") return aux_res;
+
+    return create_GeoJSON(coordinates, excludePolygons);
 }
 
 void convert_input_coordinates_to_valhalla_coordinates(const std::string& inputCoord, std::string& valhallaCoord, int radius) {

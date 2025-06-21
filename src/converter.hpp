@@ -49,6 +49,8 @@ std::string convert_coordinates_to_formated_GeoJSON_coordinates(const std::strin
  */
 std::string convert_coordinates_to_GeoJSON_feature(const std::string& coordinates, const std::string& type, bool coordsFromGeoJSON);
 
+std::string create_GeoJSON(const std::string& coordinates, const std::string& excludePolygons);
+
 /**
  * @brief Function to convert a string from a complete GeoJSON format to a simple GeoJSON format
  * 

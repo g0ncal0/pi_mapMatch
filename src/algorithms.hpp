@@ -59,7 +59,7 @@ std::string map_match_valhalla(const std::string& points, int radius = 0);
  * @param excludePolygons A string with all the polygons to be excluded in a format like "[-8.598872,41.167089;-8.601544,41.167101;-8.602729,41.165494;-8.606549,41.166443],[-8.598872,41.167089;-8.601544,41.167101;-8.602729,41.165494;-8.606549,41.166443]"
  * @return A string with the contents of the route adjusted to the map in GeoJSON format ready to be used in tools like https://geojson.io/
  */
-std::string route_valhalla(const std::string& points, const std::string& excludePolygons);
+std::string route_valhalla(const std::string& points, const std::string& excludePolygons, bool isAux = false);
 
 /**
  * @brief Function to get a specific bus route from Porto STCP network
@@ -125,5 +125,7 @@ std::string process_delete_stop(const std::string& deleteInfo, std::list<std::tu
  * @return std::string "OK" if everything went well
  */
 std::string process_changes(const std::string& changes, std::list<std::tuple<std::string, std::string, std::string, int>>& stops);
+
+std::string connect_map_match_result(const std::string& completeGeoJSON);
 
 #endif
