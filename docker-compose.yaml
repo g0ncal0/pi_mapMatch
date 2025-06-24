@@ -1,20 +1,28 @@
 version: '3.8'
 
 services:
+  mapmatcher:
+    image: goncalao/map_match:latest
+    build: .                      
+    ports:
+      - "18080:18080"
+    volumes:
+      - valhalla_data:/shared-data
+    depends_on:
+      - valhalla
+    command: |
+      bash -c "
+        cp -r /app/data/* /shared-data/ &&
+        /app/entrypoint.sh
+      "
+
   valhalla:
     image: ghcr.io/valhalla/valhalla:latest
-    container_name: valhalla_container
     ports:
       - "8002:8002"
     volumes:
-      - ./data:/data
+      - valhalla_data:/data
     command: valhalla_service /data/valhalla.json 1
 
-  mapmatcher:
-    build: .
-    depends_on:
-      - valhalla
-    volumes:
-      - ./data:/data
-    ports:
-      - "18080:18080"
+volumes:
+  valhalla_data:
